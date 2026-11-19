@@ -1,6 +1,7 @@
 import MovieCard from './MovieCard.jsx'
 import { tmdb } from "./api.js"
 import { useState, useEffect } from 'react'
+import { shape } from './shape.js'
 
 const sample = [
   {
@@ -28,7 +29,8 @@ function App() {
     useEffect(() => {
         async function load() {
             const { results } = await tmdb('/movie/now_playing')
-            setMovies(results)
+            const { genres } = await tmdb('/genre/movie/list')
+            setMovies(results.map(m => shape(m, genres)))
         }
         load()
     }, [])
@@ -36,7 +38,7 @@ function App() {
     return (
         <>
             <div id="cards">
-                { sample.map((movie) =>
+                { movies.map((movie) =>
                     <MovieCard key = { movie.id } {...movie} />
                 )}
             </div>
