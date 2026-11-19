@@ -1,61 +1,35 @@
-const user = {
-  name: 'Hedy Lamarr',
-  imageUrl: 'https://react.dev/images/docs/scientists/yXOvdOSs.jpg',
-  imageSize: 90,
-};
+import MovieCard from './MovieCard.jsx'
 
-const products = [
-  { title: 'Cabbage', id: 1 },
-  { title: 'Garlic', id: 2 },
-  { title: 'Apple', id: 3 },
-  { title: 'Grape', id: 4 }
-];
+const sample = [
+  {
+    id: 1263337,
+    title: '하트 오브 비스트',
+    poster: 'https://image.tmdb.org/t/p/w342/zC4E522V1n3H4SGdYOaiqhF5DnS.jpg',
+    genres: ['모험', '스릴러'],
+    rating: '7.6',
+    date: '2026-10-28',
+  },
+  {
+    id: 1101412,
+    title: '폴2: 데드포인트',
+    poster: 'https://image.tmdb.org/t/p/w342/v62qy8mNmseNhhsB2SXfpnbu741.jpg',
+    genres: ['스릴러'],
+    rating: '7.2',
+    date: '2026-11-11',
+  },
+]
 
-function ShoppingList() {
-  const listItems = products.map(product => (
-    <li key={product.id}>{product.title}</li>
-  ))
 
-  return <ul>{listItems}</ul>
+function App() {
+    return (
+        <>
+            <div id="cards">
+                { sample.map((movie) => 
+                    <MovieCard key = { movie.id } {...movie} />
+                )}
+            </div>
+        </>
+    )
 }
 
-function Profile() {
-  return (
-    <>
-      <h2>{user.name}</h2>
-      <img 
-        src={user.imageUrl} 
-        style={
-          {
-            width: user.imageSize,
-            height: user.imageSize
-          }
-        }
-        alt={`photo of ${user.name}`}
-        className='avatar' 
-        />
-    </>
-  )
-}
-
-function MyButton() {
-  return (
-    <button>I'm button</button>
-  )
-}
-
-export default function MyApp() {
-  const isLoggedIn = true
-
-  return (
-    <div>
-      <h1>hihi</h1>
-      <MyButton/>
-      <p>my name is hong</p>
-      {/* <Profile/> */}
-      { isLoggedIn ? <Profile/> : <p>로그인해주세요</p> }
-      { isLoggedIn && <p>welcome</p>}
-      <ShoppingList/>
-    </div>
-  )
-}
+export default App
