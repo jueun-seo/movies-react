@@ -5,7 +5,7 @@ export async function tmdb(path) {
         `https://api.themoviedb.org/3${path}`,
         { headers: {Authorization: `Bearer ${TMDB_TOKEN}`} }
     )
-    
+
     if (!res.ok) {
         throw new Error('문제가 발생했습니다')
     }
