@@ -1,31 +1,44 @@
 import MovieCard from './MovieCard.jsx'
-
-const sample = [
-  {
-    id: 1263337,
-    title: '하트 오브 비스트',
-    poster: 'https://image.tmdb.org/t/p/w342/zC4E522V1n3H4SGdYOaiqhF5DnS.jpg',
-    genres: ['모험', '스릴러'],
-    rating: '7.6',
-    date: '2026-10-28',
-  },
-  {
-    id: 1101412,
-    title: '폴2: 데드포인트',
-    poster: 'https://image.tmdb.org/t/p/w342/v62qy8mNmseNhhsB2SXfpnbu741.jpg',
-    genres: ['스릴러'],
-    rating: '7.2',
-    date: '2026-11-11',
-  },
-]
-
+import { tmdb } from "./api.js"
+import { useState, useEffect } from 'react'
 
 function App() {
+    const [movies, setMovies] = useState([])
+    const [genreMap, setGenreMap] = useState({})
+    const [error, setError] = useState(null)
+
+    useEffect(() => {
+        async function load() {
+            try {
+                const [nowPlaying, genreList] = await Promise.all([
+                    tmdb('/movie/now_playing?language=ko-KR'),
+                    tmdb('/genre/movie/list?language=ko-KR'),
+                ])
+                setMovies(nowPlaying.results)
+                setGenreMap(
+                    Object.fromEntries(genreList.genres.map((g) => [g.id, g.name]))
+                )
+            } catch (e) {
+                setError(e.message)
+            }
+        }
+        load()
+    }, [])
+
+    if (error) return <p>{ error }</p>
+
     return (
         <>
             <div id="cards">
-                { sample.map((movie) => 
-                    <MovieCard key = { movie.id } {...movie} />
+                { movies.map((m) =>
+                    <MovieCard
+                        key = { m.id }
+                        title = { m.title }
+                        poster = { m.poster_path ? `https://image.tmdb.org/t/p/w342${m.poster_path}` : '' }
+                        genres = { m.genre_ids.map((id) => genreMap[id]).filter(Boolean) }
+                        rating = { m.vote_average.toFixed(1) }
+                        date = { m.release_date }
+                    />
                 )}
             </div>
         </>
